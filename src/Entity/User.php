@@ -43,6 +43,11 @@ class User implements UserInterface, \Serializable
     private $email;
 
     /**
+     * @ORM\Column(type="json")
+     */
+    private $roles;
+
+    /**
      * @ORM\Column(type="boolean")
      */
     private $isActive = true;
@@ -80,7 +85,12 @@ class User implements UserInterface, \Serializable
 
     public function getRoles()
     {
-        return array('ROLE_USER');
+        $roles = $this->roles;
+        if(!in_array('ROLE_USER', $roles)){
+            $roles[] = 'ROLE_USER';
+        }
+
+        return $this->roles;
     }
 
     public function getSalt()
@@ -175,6 +185,16 @@ class User implements UserInterface, \Serializable
     public function setIsActive($isActive)
     {
         $this->isActive = $isActive;
+        return $this;
+    }
+
+    /**
+     * @param mixed $roles
+     * @return User
+     */
+    public function setRoles($roles)
+    {
+        $this->roles = $roles;
         return $this;
     }
 }
